@@ -1,0 +1,32 @@
+name: build wheel
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up PyPy 3.7
+        uses: actions/setup-python@v2
+        with:
+          python-version: pypy-3.7
+
+      - name: Build wheel
+        run: |
+          mkdir wheels
+          python -m pip wheel --wheel-dir wheel skia-pathops
+
+      - name: Upload wheel
+        uses: actions/upload-artifact@master
+        with:
+          name: skia-pathops-pypy-wheel
+          path: wheel
